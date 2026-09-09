@@ -1,0 +1,5 @@
+# CS 1670/2670 Projects
+
+This repository contains the project code for Brown's CS 1670/2670 (CSCI 1670/2670) class, Operating Systems (Fall 2026 edition).
+
+For more information, visit: http://cs1670.systems/
