@@ -1,0 +1,8 @@
+{
+    "chat.disableAIFeatures": true,
+    "github.copilot.nextEditSuggestions.enabled": false,
+    "github.copilot.enable": {
+        "*": false
+    },
+    "C_Cpp.default.cStandard": "c23"
+}
