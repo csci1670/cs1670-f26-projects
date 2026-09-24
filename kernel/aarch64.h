@@ -115,4 +115,13 @@
 // To mask off bits other than the imm16 bits (16 bits)
 #define ESR_EL1_IMM_MASK 0xffff  // 1111 1111 1111 1111
 
+// SCR_EL3: hand EL2 a non-secure, AArch64 world
+#define SCR_RESERVED (0b11 << 4)  // Bits 4-5: reserved (RES1)
+#define SCR_RW (0b1 << 10)        // bit 10: EL2 is AArch64
+#define SCR_NS (0b1 << 0)         // bit 0: lower ELs are in non-secure mode
+#define SCR_VALUE_EL3 (SCR_RESERVED | SCR_RW | SCR_NS)
+
+// SPSR_EL3: eret target state = EL2h, interrupts masked
+#define SPSR_VALUE_EL3 (SPSR_MASK_ALL | SPSR_EL2h)
+
 #endif  // _AARCH64_H
