@@ -13,6 +13,15 @@ extern unsigned char _binary_user_term_elf_start[];     // Quest 3
 extern unsigned char _binary_user_pong_elf_start[];     // Quest 3 (provided)
 extern unsigned char _binary_user_clock_elf_start[];    // Quest 4 (provided)
 
+// Added in Project 4. The diab_* programs (in user/diabolical/) misbehave on
+// purpose (Quest 1).
+extern unsigned char _binary_user_diab_brk_elf_start[];
+extern unsigned char _binary_user_diab_irqoff_elf_start[];
+extern unsigned char _binary_user_diab_timer_elf_start[];
+extern unsigned char _binary_user_diab_vectors_elf_start[];
+extern unsigned char _binary_user_diab_crash_elf_start[];
+extern unsigned char _binary_user_diab_stack_elf_start[];
+
 extern unsigned char _binary_user_primecheck_elf_start[];
 extern unsigned char _binary_user_hello_elf_start[];
 extern unsigned char _binary_user_counter_elf_start[];
