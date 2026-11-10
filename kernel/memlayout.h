@@ -34,6 +34,28 @@
 // #define KSTACK_SIZE YOUR_CHOSEN_VALUE   // 16 KiB is plenty
 // #define KSTACKS_BASE YOUR_CHOSEN_VALUE  // keep every stack top 16-byte aligned
 
+// The virtual address where the kernel's "high map" starts once mmu_init
+// has turned on the MMU. Physical address pa appears in the high map at
+// virtual address KERNEL_VIRTUAL_BASE + pa.
+//
+// 0x8000'0000'0000 has only bit 47 set: it is the middle of the 48-bit range
+// that TTBR0_EL1 translates (index 256 in the top-level page table). This
+// leaves room in the high map for all of physical memory, well away from the
+// low virtual addresses that processes use.
+//
+// Keep this a plain number (no ULL suffix): boot.S includes this file.
+#define KERNEL_VIRTUAL_BASE 0x800000000000
+#define KERNEL_PHYS_TO_VIRT(x) (((uint64)(x)) + KERNEL_VIRTUAL_BASE)
+#define KERNEL_VIRT_TO_PHYS(x) (((uint64)(x)) - KERNEL_VIRTUAL_BASE)
+
+// The pool of physical pages that kalloc() hands out. This must be a
+// page-aligned region of RAM that collides with nothing else (including your
+// process slots, until Project 5, Quest 4 removes them). Define it here,
+// and add it to your memory layout diagram. For a 128 MiB pool:
+//
+// #define KALLOC_BASE YOUR_CHOSEN_VALUE   // e.g., 0x10000000 (256 MiB)
+// #define KALLOC_LIMIT YOUR_CHOSEN_VALUE  // e.g., 0x18000000 (384 MiB)
+
 // Trampoline to user-reachable functions (like yield or printf).
 // This is essentially an array of function pointers at a known location, so
 // that programs can use these functions as a library.

@@ -62,12 +62,17 @@ endif
 
 ASMFLAGS = -g
 
+# Build flags for kernel code
+# -fno-pie ensures all addresses in the kernel are absolute addresses
+# since the kernel code is run directly at boot, rather than via an ELF loader
+KCFLAGS = -fno-pie
+
 # The compiler and flags this build uses, recorded in $(BUILDSTAMP). Every
 # compile rule depends on that file, and the rule for it (below) rewrites it
 # only when these change, so switching flags -- e.g., `make qemu DEBUG_LVL=1`
 # after a plain `make` -- rebuilds everything, and nothing else does.
 BUILDSTAMP := .buildflags
-BUILDFLAGS := $(GCC) $(CFLAGS) $(ASMFLAGS) $(TOOL_LDFLAGS)
+BUILDFLAGS := $(GCC) $(CFLAGS) $(KCFLAGS) $(ASMFLAGS) $(TOOL_LDFLAGS)
 
 
 K = kernel
@@ -100,10 +105,10 @@ UOBJS     += $(patsubst $(U)/diabolical/%.c,$(K)/%_kproc.o,$(UDIABSRCS))
 UPROGS := $(patsubst $(K)/%_kproc.o,%,$(UOBJS))
 
 # Find all the source files for kernel code
-KSRCS  := $(wildcard $(K)/*.c $(K)/drivers/*.c)
+KSRCS  := $(wildcard $(K)/*.c $(K)/drivers/*.c $(K)/vm/*.c)
 KSRCS  := $(sort $(KSRCS) $(K)/userprogs.c)
 
-KASM   := $(wildcard $(K)/*.S)
+KASM   := $(wildcard $(K)/*.S $(K)/vm/*.S)
 KOBJS  := $(KASM:%.S=%.o) $(KSRCS:%.c=%.o)
 
 OBJDIR = obj
@@ -153,7 +158,7 @@ endif
 
 $(K)/%.o: $(K)/%.c $(BUILDSTAMP)
 	mkdir -p $(@D) $(DEPSDIR)/$(K)/$(*D)
-	$(GCC) $(CFLAGS) -MMD -MP -MF $(DEPSDIR)/$(K)/$*.d -Ikernel -c $< -o $@
+	$(GCC) $(CFLAGS) $(KCFLAGS) -MMD -MP -MF $(DEPSDIR)/$(K)/$*.d -Ikernel -c $< -o $@
 
 $(K)/%.o: $(K)/%.S $(BUILDSTAMP)
 	mkdir -p $(DEPSDIR)/$(K)/$(*D)
